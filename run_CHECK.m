@@ -1,7 +1,6 @@
 function eflag = run_CHECK(varargin)
 
 %%%%% Check data for IDEAS
-tic
 %%%%%%%%%%% Function arguments, in order:
 obsflag = 1; %0 if data correspond is not from a valid observation (disables accelerometer processing)
 Ifolder = fullfile(pwd,'data/to_clean'); %path to folder that contains the observation folders to process
