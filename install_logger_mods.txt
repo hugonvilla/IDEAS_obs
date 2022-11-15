@@ -1,0 +1,7 @@
+npm install barnacles;
+npm install barnacles-logfile;
+npm install raddec;
+npm install raddec-filter;
+npm install advlib-ble;
+npm install advlib-ble-manufacturers;
+npm install advlib-ble-services;
