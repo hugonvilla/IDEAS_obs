@@ -2,7 +2,9 @@ import os
 import subprocess
 import time
 import numpy as np
+import pandas as pd
 from datetime import datetime
+from bin.sync_tone_gen import sync_tone_gen
 
 
 def run_OBS(*args,**kwargs):
@@ -33,7 +35,7 @@ def run_OBS(*args,**kwargs):
     ## Diract warm-up
     print (f'Warming-up Logger. This will take {Tp} seconds')
     dnow = datetime.now()#.strftime('%m%d%y_%H%M%S') #get current system time in local time
-    print (dnow)
+    #print (dnow)
 
     #p = subprocess.Popen(["node","logger.js"])
     #time.sleep(Tp)
@@ -49,33 +51,26 @@ def run_OBS(*args,**kwargs):
     date = np.array([os.path.getmtime(os.path.join(Fopath,FILE)) for FILE in Tdata])
     idx = date.argmax() #get last modified file
     date = datetime.fromtimestamp(date[idx]) #last modified 
-    dif = (date - dnow).total_seconds() #time difference
+    diff = (date - dnow).total_seconds() #time difference
     
-    if dif < (Tp * 2): #if no file has been modified within 2*Tp seconds
-        print('ERROR: The log file was not created. Check your connection to the reelyActive network')
-        return
+    #if diff < (Tp * 2): #if no file has been modified within 2*Tp seconds
+    #    print('ERROR: The log file was not created. Check your connection to the reelyActive network')
+    #    return
     
     Tname=Tdata[idx]
-    print (Tname)
-    T=read_dynamb(Tname)
-    T[strcmp(T.nearest,'[]'),arange()]=[]
     
-    Bname,__,ic=unique(T.deviceId,nargout=3)
-    
-    Hab=histcounts(ic,numel(unique(ic)))
-    
-    Invbeac=Bname(Hab < ceil(dot(0.2,max(Hab))))
-    
-    T[contains(T.deviceId,Invbeac),arange()]=[]
-    Bname=unique(T.deviceId)
-    
-    Nbeac=length(Bname)
-    #delete *.csv
-    disp(concat(['There are ',num2str(Nbeac),' active beacons.']))
+    T = pd.read_csv(os.path.join(pwd, Tname))
+    T = T[T.nearest != '[]'] #delete inactive rows
+    Beacons = T.deviceId.value_counts() #get beacon names and frequencies broadcast
+    Beacons = Beacons[Beacons > np.ceil(0.2 * Beacons.max())] #delete beacons with few appearances
+    Nbeac = Beacons.size
+    #[os.remove(FILE) for FILE in os.listdir(Fopath) if ".csv" in FILE] #delete .csv files
+    print (f'There are {Nbeac} active beacons.')
+
     ## Audio Sync
-    disp('Audio synchronization tone will sound in 10 seconds.')
-    disp('Prepare the voice recorders. Make sure the computer volume is at 100%.')
-    Ta=sync_tone_gen(Tf)
+    print('Audio synchronization tone will sound in 10 seconds.')
+    print('Prepare the voice recorders. Make sure the computer volume is at 100%.')
+    Ta = sync_tone_gen(Tf)
     ## Run Logger
     flag=0
     #if isunix
