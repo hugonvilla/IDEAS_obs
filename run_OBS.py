@@ -1,6 +1,7 @@
 import os   
 import subprocess
 import time
+import numpy as np
 from datetime import datetime
 
 
@@ -45,19 +46,17 @@ def run_OBS(*args,**kwargs):
     if Tdata == []: #If there is no .csv files
         print ('ERROR: The log file was not created. Check your connection to the reelyActive network')
 
-    #TODO Elegir el arhivo mas reciente y solo operar con ese archivo
-    date = os.path.getmtime(os.path.join(Fopath,Tdata[0])) 
-    date = datetime.fromtimestamp(date)#.strftime('%m%d%y_%H%M%S') #last modified 
-    #date = time.strftime('%m%d%y_%H%M%S', time.strptime(date))
-    dif = (dnow - date).total_seconds() #time difference
+    date = np.array([os.path.getmtime(os.path.join(Fopath,FILE)) for FILE in Tdata])
+    idx = date.argmax() #get last modified file
+    date = datetime.fromtimestamp(date[idx]) #last modified 
+    dif = (date - dnow).total_seconds() #time difference
     
     if dif < (Tp * 2): #if no file has been modified within 2*Tp seconds
         print('ERROR: The log file was not created. Check your connection to the reelyActive network')
         return
     
-    __,ik=max(date,nargout=2)
-    
-    Tname=Tdata(ik).name
+    Tname=Tdata[idx]
+    print (Tname)
     T=read_dynamb(Tname)
     T[strcmp(T.nearest,'[]'),arange()]=[]
     
