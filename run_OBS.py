@@ -7,14 +7,13 @@ from datetime import datetime, timedelta
 from bin.sync_tone_gen import sync_tone_gen
 
 
-def run_OBS(*args,**kwargs):
+def run_OBS():
     ##### Runs Observation Protocol. Make sure all beacons and recorders are
     ##### ON and the computer is connected to the reelyActive Wifi network.
     ##### If errors occur, check protocol and run again
     ##### Required: install node and logger packages
     pwd = os.getcwd()
-    PATH_BIN = os.path.join(pwd, 'bin')
-    #addpath(fullfile(pwd,'bin'))
+
     ## Get classroom number
     fl=0
     Cnums = ''
@@ -25,17 +24,14 @@ def run_OBS(*args,**kwargs):
             print('The classroom number must have four digits.')
         else:
             fl=1
-
     
     ## Run Parameters
     Tf=3000 #sync tone frequency
     Tp=15 #warm-up time
-    
-    
+
     ## Diract warm-up
     print (f'Warming-up Logger. This will take {Tp} seconds')
-    dnow = datetime.now()#.strftime('%m%d%y_%H%M%S') #get current system time in local time
-    #print (dnow)
+    dnow = datetime.now() #get current system time in local time
 
     p = subprocess.Popen(["node","logger.js"])
     time.sleep(Tp)
@@ -43,13 +39,13 @@ def run_OBS(*args,**kwargs):
     
     Fopath = pwd
     Tdata = [FILE for FILE in os.listdir(Fopath) if ".csv" in FILE]
-    Tdata = [FILE for FILE in Tdata if "dynamb" in FILE]
+    Tdata = [FILE for FILE in Tdata if "dynamb" in FILE] #delete ghost files
 
     if Tdata == []: #If there is no .csv files
         print ('ERROR: The log file was not created. Check your connection to the reelyActive network')
         return
 
-    date = np.array([os.path.getmtime(os.path.join(Fopath,FILE)) for FILE in Tdata])
+    date = np.array([os.path.getmtime(os.path.join(Fopath,FILE)) for FILE in Tdata]) #get modified date of all .csv files
     idx = date.argmax() #get last modified file
     date = datetime.fromtimestamp(date[idx]) #last modified 
     diff = np.abs((date - dnow).total_seconds()) #time difference
@@ -58,9 +54,9 @@ def run_OBS(*args,**kwargs):
         print('ERROR: The log file was not created. Check your connection to the reelyActive network')
         return
     
-    Tname=Tdata[idx]
     
-    T = pd.read_csv(os.path.join(pwd, Tname))
+    Tname=Tdata[idx]
+    T = pd.read_csv(os.path.join(pwd, Tname)) #get last modified file
     T = T[T.nearest != '[]'] #delete inactive rows
     Beacons = T.deviceId.value_counts() #get beacon names and frequencies broadcast
     Beacons = Beacons[Beacons > np.ceil(0.2 * Beacons.max())] #delete beacons with few appearances
@@ -84,31 +80,31 @@ def run_OBS(*args,**kwargs):
 
         SIU = input('Enter STOP to halt the data collection: ')
         if SIU == 'STOP':
-            doff = datetime.now()
+            doff = datetime.now() #get current system time
             p.terminate()
             flag = 1
 
     Dur = (doff - don).total_seconds() / 60
     if Dur > 15:
-        don = don + timedelta(minutes=10) # 
+        don = don + timedelta(minutes=10) #if long observation, %%observation onset: 10 minutes after Ttone, assuming it takes that long to have all kids wearing the hardware. Manual entry if otherwise
     
     don  = don.strftime('%m%d%y_%H%M%S')
     doff = doff.strftime('%m%d%y_%H%M%S')
     
     ## Save Data
-    Dfol = os.path.join(pwd,'data','to_clean',f'{Cnums}_{don}')
+    Dfol = os.path.join(pwd,'data','to_clean',f'{Cnums}_{don}') #destination folder (classroom name + onset date)
     os.mkdir(Dfol)
     Ta['system_on'] = [don]
     Ta['system_off'] = [doff]
     #Ta.tzoffset = don
-    pd.DataFrame.from_dict(Ta).to_csv(os.path.join(Dfol, 'MD.csv'), index = False) # destination folder (classroom name + onset date)
+    pd.DataFrame.from_dict(Ta).to_csv(os.path.join(Dfol, 'MD.csv'), index = False)
     
     ##### Check beacon data
     print('Processsing Data. This will take 5 seconds. Do not turn off the laptop.')
     Tdata = [FILE for FILE in os.listdir(Fopath) if ".csv" in FILE]
     Tdata = [FILE for FILE in Tdata if "dynamb" in FILE] # delete ghost files
     
-    for ii in range (len(Tdata)):
+    for ii in range (len(Tdata)): #for each file
         Tname = os.path.join(Fopath,Tdata[ii])
         TA = pd.read_csv(Tname)
         if ii > 1: #if second file or more
@@ -123,6 +119,7 @@ def run_OBS(*args,**kwargs):
     Beacons = T.deviceId.value_counts() #get beacon names and frequencies broadcast
     Beacons = Beacons[Beacons > np.ceil(0.2 * Beacons.max())] #delete beacons with few appearances
     
+    #TODO add line below
     #T[contains(T.deviceId,Invbeac),arange()]=[]
     Bname  = T.deviceId.unique()
     Bnamei = "B" + Bname
