@@ -3,6 +3,7 @@ import soundfile
 from playsound import playsound
 import time
 import os
+from datetime import datetime, timedelta
 
 # Code to generate synchronization tone. This script should be run at
 # the beggining and end of the observations (before turning off the
@@ -16,6 +17,8 @@ def sync_tone_gen (Tf):
     Tf = Tf
 
     #Tone time
+    Tnow = datetime.now()
+    Ttone = (Tnow + timedelta(seconds=DT)).strftime('%m%d%y_%H%M%S')
 
     # Run code
     sf = Tf * 4 #sampling frequency
@@ -37,6 +40,7 @@ def sync_tone_gen (Tf):
 
     os.remove('warm_up.wav')
     os.remove('tone.wav')
+    return {'sys_sync' : [Ttone], 'tfreq' : [Tf], 'tdur' : [Td]}
 
 if __name__ == '__main__':
     sync_tone_gen(3000)
