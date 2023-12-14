@@ -1,0 +1,33 @@
+{
+  "name": "ideas_obs",
+  "version": "1.0.0",
+  "description": "Codes for observation and data check with IDEAS",
+  "main": "logger.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hugonvilla/IDEAS_obs.git#main"
+  },
+  "keywords": [
+    "ideas",
+    "beacons"
+  ],
+  "author": "Hugo Villasanti",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hugonvilla/IDEAS_obs/issues"
+  },
+  "homepage": "https://github.com/hugonvilla/IDEAS_obs/tree/main#readme",
+  "dependencies": {
+    "advlib-ble": "^1.3.1",
+    "advlib-ble-manufacturers": "^1.6.0",
+    "advlib-ble-services": "^1.4.1",
+    "barnacles": "^1.5.8",
+    "barnacles-logfile": "^1.2.0"
+  }
+}
