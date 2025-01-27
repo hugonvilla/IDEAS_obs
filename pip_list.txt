@@ -1,4 +1,4 @@
 pip install soundfile
-pip install playsound
+pip install sounddevice
 pip install xlsxwriter
 pip install pandas
