@@ -1,12 +1,13 @@
 import numpy as np
 import soundfile
-from playsound import playsound
+# from playsound import playsound
+import sounddevice as sd
 import time
 import os
 from datetime import datetime, timedelta
 
 # Code to generate synchronization tone. This script should be run at
-# the beggining and end of the observations (before turning off the
+# the beginning and end of the observations (before turning off the
 # voice recorders.)
 def sync_tone_gen (Tf):
     # Tone Parameters
@@ -29,17 +30,19 @@ def sync_tone_gen (Tf):
     tm = np.arange(start = 0, stop = Tm, step = 1/sf)
     ym = np.sin((2*np.pi*fm)*tm)*MAX_AMP
 
-    soundfile.write(file='warm_up.wav', data=ym, samplerate=sf, subtype='PCM_16')
-    soundfile.write(file='tone.wav', data=y, samplerate=sf, subtype='PCM_16')
+    #soundfile.write(file='warm_up.wav', data=ym, samplerate=sf, subtype='PCM_16')
+    #soundfile.write(file='tone.wav', data=y, samplerate=sf, subtype='PCM_16')
+    #playsound('warm_up.wav') # warm up sound card with short tone
 
-    playsound('warm_up.wav') # warm up sound card with short tone
+    sd.play(ym,sf) # warm up sound card with short tone
 
     time.sleep(DT)
     
-    playsound('tone.wav')
+    #playsound('tone.wav')
+    sd.play(y,sf)
 
-    os.remove('warm_up.wav')
-    os.remove('tone.wav')
+    # os.remove('warm_up.wav')
+    # os.remove('tone.wav')
     return {'sys_sync' : [Ttone], 'tfreq' : [Tf], 'tdur' : [Td]}
 
 if __name__ == '__main__':
