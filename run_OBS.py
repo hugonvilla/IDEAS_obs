@@ -87,6 +87,11 @@ def run_OBS():
     Dur = (doff - don).total_seconds() / 60
     if Dur > 15:
         don = don + timedelta(minutes=10) #if long observation, %%observation onset: 10 minutes after Ttone, assuming it takes that long to have all kids wearing the hardware. Manual entry if otherwise
+
+    offset = don.astimezone().utcoffset()
+    offset_hours = int(offset.total_seconds() // 3600)
+    offset_minutes = int((offset.total_seconds() % 3600) // 60)
+    offset_string = f"{offset_hours:+03}:{offset_minutes:02}" #time zone offset from UTC
     
     don  = don.strftime('%m%d%y_%H%M%S')
     doff = doff.strftime('%m%d%y_%H%M%S')
@@ -96,7 +101,7 @@ def run_OBS():
     os.mkdir(Dfol)
     Ta['system_on'] = [don]
     Ta['system_off'] = [doff]
-    #Ta.tzoffset = don
+    Ta['tzoffset'] = [offset_string]
     pd.DataFrame.from_dict(Ta).to_csv(os.path.join(Dfol, 'MD.csv'), index = False)
     
     ##### Check beacon data
