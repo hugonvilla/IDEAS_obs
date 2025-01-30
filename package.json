@@ -28,6 +28,10 @@
     "advlib-ble-manufacturers": "^1.6.0",
     "advlib-ble-services": "^1.4.1",
     "barnacles": "^1.5.8",
-    "barnacles-logfile": "^1.2.0"
+    "barnacles-logfile": "^1.2.0",
+    "barnowl",
+    "barnowl-minew",
+    "express",
+    "http"
   }
 }
