@@ -1,3 +1,5 @@
 # IDEAS_obs
-Codes for observation and data check with IDEAS
+- Install required packages:
+-   npm install
+-   conda env create -f environment.yml
 - To run an observation, execute run_OBS.bat
