@@ -29,9 +29,9 @@
     "advlib-ble-services": "^1.4.1",
     "barnacles": "^1.5.8",
     "barnacles-logfile": "^1.2.0",
-    "barnowl",
-    "barnowl-minew",
-    "express",
-    "http"
+    "barnowl": "^1.3.3",
+    "barnowl-minew": "^1.2.1",
+    "express": "^4.21.2",
+    "http": "0.0.1-security"
   }
 }
