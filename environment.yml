@@ -1,0 +1,10 @@
+name: ideas 
+channels:
+  - conda-forge 
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy=1.26.4
+  - pandas=2.0.3
+  - XlsxWriter=3.1.9
+  - sounddevice==0.5.1
