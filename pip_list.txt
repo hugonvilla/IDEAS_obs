@@ -1,4 +1,0 @@
-pip install numpy
-pip install sounddevice
-pip install xlsxwriter
-pip install pandas
