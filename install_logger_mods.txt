@@ -5,7 +5,7 @@ npm install raddec-filter;
 npm install advlib-ble;
 npm install advlib-ble-manufacturers;
 npm install advlib-ble-services;
-npm install barnowl
-npm install barnowl-minew
-npm install express
-npm install http
+npm install barnowl;
+npm install barnowl-minew;
+npm install express;
+npm install http;
