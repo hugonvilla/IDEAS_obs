@@ -8,4 +8,4 @@ dependencies:
   - nodejs=22.13.0
   - pandas=2.0.3
   - XlsxWriter=3.1.9
-  - sounddevice==0.5.1
+  - python-sounddevice==0.5.0
